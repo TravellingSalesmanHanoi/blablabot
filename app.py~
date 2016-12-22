@@ -1,49 +1,12 @@
 import os
 import sys
 import json
-import re
-from bs4 import BeautifulSoup
-import random
+import bs4
 
 import requests
 from flask import Flask, request
 
 app = Flask(__name__)
-
-
-def Quote_Get(query):
-  quote_data=requests.get('https://www.brainyquote.com/search_results.html?q={}'.format(str(query).lower()))          #parse brainy quote by term
-  soup=BeautifulSoup(quote_data.text,'html.parser')
-  
-  notFound=soup.find_all('h2')
-  for entry in notFound:
-	  if 'Your search for' in entry.text:
-		  return Quote_Get('gibberish')
-  
-  
-  
-  
-  max_pages=soup.find_all('a',href=re.compile('/search_results'))
-  print(max_pages)
-  if max_pages!=[]:
-      navigation_text=[int(i.text) for i in max_pages if i.text.isdigit()] #find how many pages there are by using the navigation panel
-      max_page=max(navigation_text)
-      quote_data=requests.get('https://www.brainyquote.com/search_results.html?q={}&&pg={}'.format(str(query).lower() \
-      ,str(random.randint(1,max_page-1)))) #choose a random page       #choose a random page
-      soup=BeautifulSoup(quote_data.text,'html.parser') 
- 
-  
-	  
-  
-  quotes=soup.find_all('a',class_=re.compile('qt_[1-9]*'))
-  quote=random.choice(quotes)
-  print(quote.text)
-  return quote.text
-  
-  
-  
-
-
 
 
 
@@ -80,9 +43,9 @@ def webhook():
                     try:
                         message_text = messaging_event["message"]["text"]  # the message's text
                         words=message_text.split(' ')
-                        
+                        if 
                     except KeyError:
-                      send_message(sender_id,'Sorry I can only talk and read in text')
+						send_message(sender_id,'Sorry I can only talk and read in text')
 					
                     
                     
@@ -132,6 +95,4 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-    #sapp.run(debug=True)
-    Quote_Get('dddd')
-   
+    app.run(debug=True)
