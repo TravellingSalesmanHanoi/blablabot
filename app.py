@@ -12,6 +12,8 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
+
+
 def pick_words(lines):
   """A function to find words with possible context in a string"""
   blob=TextBlob(lines)
@@ -24,13 +26,15 @@ def pick_words(lines):
 def pick_random_word(lines): 
   """Picks a random word and finds a relevant word from its definition"""
   word=pick_words(lines)
-  random_words=random.choice(words)
-  if random_word[1]!='NNP':           #names don't need a definition
-	  rand_definition=random.choice(Word(random_word[0]).definitions)    #pick a random definition (not so smart)
-	  words=pick_words(rand_definition)
-	  return random.choice(words)[0]  #tagless word
+  random_word=random.choice(word)
+  if random_word[1]!='NNP':   #names don't need a definition
+      word_obj=Word(random_word[0])
+      random_synset = random.choice(word_obj.synsets)
+      random_lemma = random.choice(random_synset.lemma_names())
+      return random_lemma
   else:
-	  return random_word[0]
+      return random_word[0]
+  
   
   
   
@@ -63,7 +67,7 @@ def Quote_Get(query):
   
   quotes=soup.find_all('a',class_=re.compile('qt_[1-9]*'))
   authors=soup.find_all('a',class_=re.compile('qa_[1-9]*'))  
-  full_quote="""{}                            #format of the quote
+  full_quote="""{}                            
   -{}"""                                            
   
   
@@ -71,8 +75,11 @@ def Quote_Get(query):
   full_quotes=[full_quote.format(quote.text,author.text) for quote,author in zip(quotes,authors)]
   
   
-	  
-  quote=random.choice(full_quotes)       #choose a random quote
+  
+  try:
+    quote=random.choice(full_quotes)       #choose a random quote
+  except IndexError:
+    return Quote_Get('confused')
   return quote
   
   
@@ -119,7 +126,7 @@ def webhook():
                         
                         
                     except KeyError:
-                      send_message(sender_id,'Sorry I can only talk and read in text')
+                      send_message(sender_id,'I need text messages')
 					
                     
                     
@@ -170,6 +177,8 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 if __name__ == '__main__':
   app.run(debug=True)
+  
+  
   
   
 
