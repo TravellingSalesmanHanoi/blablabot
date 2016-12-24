@@ -10,6 +10,8 @@ from textblob import Word
 import requests
 from flask import Flask, request
 
+nltk.data.path.append('./nltk_data/')       #tell python where to look for nltk
+
 app = Flask(__name__)
 
 
