@@ -28,21 +28,28 @@ def pick_words(lines):
 
 def pick_random_word(lines): 
   """Picks a random word and finds a relevant word from its definition"""
-  word=pick_words(lines)
-  random_word=random.choice(word)
-  if random_word[1]!='NNP':   #names don't need a definition
+  words=pick_words(lines)
+  NNP_words=[i for i in words if i[1] in ('NNP','NNPS')]
+  if NNP_words!=[]:
+    random_word=random.choice(NNP_words)
+    return random_word[0]
+  elif random.randint(0,100)<=49:          #randomly choose a synonym for diversity
+      random_word=random.choice(words)   
       word_obj=Word(random_word[0])
       try:
-        random_synset = random.choice(word_obj.synsets)
+        noun_regex=re.compile(r'\w+\.n\.[0-9]*')
+        noun_synsets=[synset for synset in word_obj.synsets if noun_regex.match(synset.name())]      #only the noun synsets are useful(others cause gibberish)
+        random_synset = random.choice(noun_synsets)
         random_lemma = random.choice(random_synset.lemma_names())
-        return random_lemma
+        return random_lemma.replace('_',' ')
       except IndexError:
-		  return random_word[0]
-		  
-      
+        return random_word[0]
   else:
-      return random_word[0]
-  
+      random_word=random.choice(words)   
+      return random_word[0]  
+        
+		  
+
   
   
   
@@ -184,7 +191,8 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-  app.run(debug=True)
+  #app.run(debug=True)
+  print(pick_random_word('Jews should die'))
  
 
   
