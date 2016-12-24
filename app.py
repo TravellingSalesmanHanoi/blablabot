@@ -4,12 +4,39 @@ import json
 import re
 from bs4 import BeautifulSoup
 import random
+from textblob import TextBlob
+from textblob import Word
 
 import requests
 from flask import Flask, request
 
 app = Flask(__name__)
 
+def pick_words(lines):
+  """A function to find words with possible context in a string"""
+  blob=TextBlob(lines)
+  words=[word for word in blob.tags if word[1]=='NN' or word[1]=='NNS' or word[1]=='NNP' or word=="JJ"]      #nouns and adjectives
+  if words==[]:
+	  return []
+  return words
+	
+
+def pick_random_word(lines): 
+  """Picks a random word and finds a relevant word from its definition"""
+  word=pick_words(lines)
+  random_words=random.choice(words)
+  if random_word[1]!='NNP':           #names don't need a definition
+	  rand_definition=random.choice(Word(random_word[0]).definitions)    #pick a random definition (not so smart)
+	  words=pick_words(rand_definition)
+	  return random.choice(words)[0]  #tagless word
+  else:
+	  return random_word[0]
+  
+  
+  
+  
+  
+  
 
 def Quote_Get(query):
   quote_data=requests.get('https://www.brainyquote.com/search_results.html?q={}'.format(str(query).lower()))          #parse brainy quote by term
@@ -87,7 +114,9 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     try:
                         message_text = messaging_event["message"]["text"]  # the message's text
-                        words=message_text.split(' ')
+                        reply_text=Quote_Get(pick_random_word(message_text))
+                        send_message(reply_text)
+                        
                         
                     except KeyError:
                       send_message(sender_id,'Sorry I can only talk and read in text')
@@ -96,7 +125,7 @@ def webhook():
                     
 						
 
-                    send_message(sender_id,Quote_Get(str(entry)))
+                    
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
@@ -140,6 +169,9 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-    #sapp.run(debug=True)
-    Quote_Get('dddd')
+  app.run(debug=True)
+  
+  
+
+
    
