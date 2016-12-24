@@ -125,7 +125,7 @@ def webhook():
                     try:
                         message_text = messaging_event["message"]["text"]  # the message's text
                         reply_text=Quote_Get(pick_random_word(message_text))
-                        send_message(reply_text)
+                        send_message(sender_id,reply_text)
                         
                         
                     except KeyError:
