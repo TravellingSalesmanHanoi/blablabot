@@ -24,21 +24,29 @@ def Quote_Get(query):
   
   
   max_pages=soup.find_all('a',href=re.compile('/search_results'))
-  print(max_pages)
   if max_pages!=[]:
       navigation_text=[int(i.text) for i in max_pages if i.text.isdigit()] #find how many pages there are by using the navigation panel
       max_page=max(navigation_text)
       quote_data=requests.get('https://www.brainyquote.com/search_results.html?q={}&&pg={}'.format(str(query).lower() \
-      ,str(random.randint(1,max_page-1)))) #choose a random page       #choose a random page
+      ,str(random.randint(1,max_page-1))))       #choose a random page
       soup=BeautifulSoup(quote_data.text,'html.parser') 
  
   
 	  
   
   quotes=soup.find_all('a',class_=re.compile('qt_[1-9]*'))
-  quote=random.choice(quotes)
-  print(quote.text)
-  return quote.text
+  authors=soup.find_all('a',class_=re.compile('qa_[1-9]*'))  
+  full_quote="""{}                            #format of the quote
+  -{}"""                                            
+  
+  
+  
+  full_quotes=[full_quote.format(quote.text,author.text) for quote,author in zip(quotes,authors)]
+  
+  
+	  
+  quote=random.choice(full_quotes)       #choose a random quote
+  return quote
   
   
   
@@ -88,7 +96,7 @@ def webhook():
                     
 						
 
-                    send_message(sender_id, str(entry))
+                    send_message(sender_id,Quote_Get(str(entry)))
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
