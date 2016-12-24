@@ -7,6 +7,7 @@ import random
 from textblob import TextBlob
 from textblob import Word
 import nltk
+import time
 
 import requests
 from flask import Flask, request
@@ -57,45 +58,81 @@ def pick_random_word(lines):
   
   
 
-def Quote_Get(query):
-  quote_data=requests.get('https://www.brainyquote.com/search_results.html?q={}'.format(str(query).lower()))          #parse brainy quote by term
+def Quote_Get(query,default_query='Gibberish'):
+  formatted_query=query[0].upper() + query[1::]
+  quote_data=requests.get('https://en.wikiquote.org/wiki/{}'.format(str(query).lower()),allow_redirects=True)          #parse brainy quote by term
   soup=BeautifulSoup(quote_data.text,'html.parser')
   
-  notFound=soup.find_all('h2')
-  for entry in notFound:
-	  if 'Your search for' in entry.text:
-		  return Quote_Get('gibberish')
+  error_text='If you have created this page in the past few minutes and it has not yet appeared'
+  if error_text in soup.text:
+      return Quote_Get('Confusion')
   
+  search_heading=soup.find('h1',class_='firstHeading').text
   
-  
-  
-  max_pages=soup.find_all('a',href=re.compile('/search_results'))
-  if max_pages!=[]:
-      navigation_text=[int(i.text) for i in max_pages if i.text.isdigit()] #find how many pages there are by using the navigation panel
-      max_page=max(navigation_text)
-      quote_data=requests.get('https://www.brainyquote.com/search_results.html?q={}&&pg={}'.format(str(query).lower() \
-      ,str(random.randint(1,max_page-1))))       #choose a random page
-      soup=BeautifulSoup(quote_data.text,'html.parser') 
  
+  
+  if search_heading=='Search Results' or error_text in search_heading:
+      return Quote_Get('confusion')
+      
+      
+  body=soup.find('div',id='mw-content-text',class_='mw-content-ltr')
+  quotes=body.find_all('ul')
+  previous=quotes[0]
+  
+  num_of_quote=random.randint(0,len(quotes)//2) #about half are duplicates
+  
+  for quote in quotes:
+      if len(quote.find_all('li'))>2:     # gets rid of menus since quotes only contain up to 2 li
+          continue
+      
+      
+      if quote.text not in previous.text:  #duplicate uls are avoided
+        if num_of_quote==0:
+          return quote.text                        #erratic formatting blocks beautiful soup
+        else:                                               #iterative method to keep ram to a minimum
+          num_of_quote-=1
+          previous=quote  
+  return Quote_Get('Confusion')
+                            
+
+      
+      
+  
+      
+      
+  
+  
+  
+  
+  
+
+
+      
+  
+  
+  
+  
+  
+  
   
 	  
   
-  quotes=soup.find_all('a',class_=re.compile('qt_[1-9]*'))
-  authors=soup.find_all('a',class_=re.compile('qa_[1-9]*'))  
-  full_quote="""{}                            
-  -{}"""                                            
+  #quotes=soup.find_all('a',class_=re.compile('qt_[1-9]*'))
+  #authors=soup.find_all('a',class_=re.compile('qa_[1-9]*'))  
+  #full_quote="""{}                            
+  #-{}"""                                            
   
   
   
-  full_quotes=[full_quote.format(quote.text,author.text) for quote,author in zip(quotes,authors)]
+  #full_quotes=[full_quote.format(quote.text,author.text) for quote,author in zip(quotes,authors)]
   
   
   
-  try:
-    quote=random.choice(full_quotes)       #choose a random quote
-  except IndexError:
-    return Quote_Get('confused')
-  return quote
+  #try:
+    #quote=random.choice(full_quotes)       #choose a random quote
+  #except IndexError:
+    #return Quote_Get('confused')
+  #return quote
   
   
   
@@ -137,11 +174,15 @@ def webhook():
                     try:
                         message_text = messaging_event["message"]["text"]  # the message's text
                         reply_text=Quote_Get(pick_random_word(message_text))
-                        send_message(sender_id,reply_text)
+                        if reply_text!='':
+                          send_message(sender_id,reply_text)
                         
                         
                     except KeyError:
                       send_message(sender_id,'I need text messages')
+                    except ValueError:
+                        log('Null message')
+                        
 					
                     
                     
@@ -191,9 +232,8 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-  #app.run(debug=True)
-  print(pick_random_word('Jews should die'))
- 
+  app.run(debug=True)
+  
 
   
   
