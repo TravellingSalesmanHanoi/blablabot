@@ -32,9 +32,14 @@ def pick_random_word(lines):
   random_word=random.choice(word)
   if random_word[1]!='NNP':   #names don't need a definition
       word_obj=Word(random_word[0])
-      random_synset = random.choice(word_obj.synsets)
-      random_lemma = random.choice(random_synset.lemma_names())
-      return random_lemma
+      try:
+        random_synset = random.choice(word_obj.synsets)
+        random_lemma = random.choice(random_synset.lemma_names())
+        return random_lemma
+      except IndexError:
+		  return random_word[0]
+		  
+      
   else:
       return random_word[0]
   
