@@ -173,7 +173,7 @@ def webhook():
                     try:
                         message_text = messaging_event["message"]["text"]  # the message's text
                         #reply_text=Quote_Get(pick_random_word(message_text))
-                        rand=andom.choice(pick_words(message_text))
+                        rand=random.choice(pick_words(message_text))
                         reply_text= rand+Quote_Get(rand)
                         
                         if reply_text!='':
