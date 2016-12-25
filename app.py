@@ -59,7 +59,6 @@ def pick_random_word(lines):
   
 
 def Quote_Get(query,default_query='Gibberish'):
-  formatted_query=query[0].upper() + query[1::]
   quote_data=requests.get('https://en.wikiquote.org/wiki/{}'.format(str(query).lower()),allow_redirects=True)          #parse brainy quote by term
   soup=BeautifulSoup(quote_data.text,'html.parser')
   
