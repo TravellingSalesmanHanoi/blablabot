@@ -28,9 +28,9 @@ def pick_words(lines):
   blob=TextBlob(lines)
   words=[word for word in blob.tags if word[1]=='NN' or word[1]=='NNS' or word[1]=='NNP' or word=="JJ"]      #nouns and adjectives
   if words==[]:
-	  words=[word for word in blob.tags if word[0] not in stopwords.words('english')]
+	  words=[word for word in blob.tags if word[0] not in stopwords.words('english')]       #no nouns
   if words==[]:
-	  words=blob.tags
+	  words=blob.tags       #all words are stop words
 	   	
 	  
 	  
@@ -56,10 +56,12 @@ def pick_random_word(lines):
         return random_lemma.replace('_',' ')
       except IndexError:
         return random_word[0]
-  else:
+  elif words!=[]:
       random_word=random.choice(words)
       log(random_word[0])   
-      return random_word[0]  
+      return random_word[0]
+  else:
+	  return 'nothing'    
         
 		  
 
