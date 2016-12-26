@@ -57,17 +57,22 @@ def pick_random_word(lines):
 def 	goodreads_get(query):
 	quote_data=requests.get('http://www.goodreads.com/quotes/tag/{}'.format(str(query)))
 	soup=BeautifulSoup(quote_data.text,'html.parser')
+	log('got data')
 	
 	quotes_set=soup.find_all('div',class_='quoteText')
 	if quotes_set==[]:
-		return goodreads_get(random.choice(['confusion','gibberish','cheese']))
+		log('gpt gibberish')
+		return goodreads_get(random.choice(['confusion','gibberish','cheese']))     
 	quotes=[quote.text.split('//')[0] for quote in quotes_set]    #remove script from quotes
+	log('split text')
 	quotes=[re.sub(r'(\n *)|(\n ―\n )','\n ',quote) for quote in quotes]     #format quotes
+	log('n1')
 	quotes=[re.sub(r' *\n *\n','',quote) for quote in quotes]
+	log('n2'
 	
 	authors=soup.find_all('a',class_='authorOrTitle')
 	authors=[author.text for author in authors]
-	
+	log('fin')
 	return random.choice(quotes)
 	
 
@@ -208,7 +213,7 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     try:
                         message_text = messaging_event["message"]["text"]  # the message's text
-                        log(message_text)
+                        log('got to message')
                         reply_text=goodreads_get(pick_random_word(message_text))
                         log(reply_text)
                         
@@ -271,6 +276,8 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 if __name__ == '__main__':
   app.run(debug=True)
+ 
+  
  
   
   
