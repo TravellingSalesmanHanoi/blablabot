@@ -216,7 +216,6 @@ def webhook():
                         log('got to message')
                         log(message_text)
                         reply_text=goodreads_get(pick_random_word(message_text))
-                        reply_text='aaaaaaaaaaaaaaa'
                         log(reply_text)
                         
                         if reply_text!='':
