@@ -208,7 +208,9 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     try:
                         message_text = messaging_event["message"]["text"]  # the message's text
+                        log(message_text)
                         reply_text=goodreads_get(pick_random_word(message_text))
+                        log(reply_text)
                         
                         if reply_text!='':
                           send_message(sender_id,reply_text)
@@ -269,6 +271,7 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 if __name__ == '__main__':
   app.run(debug=True)
+ 
   
   
   
