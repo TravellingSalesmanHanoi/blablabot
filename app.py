@@ -65,7 +65,7 @@ def 	goodreads_get(query):
 	if quotes_set==[]:
 		log('gpt gibberish')
 		return goodreads_get(random.choice(['confusion','gibberish','cheese']))     
-	quotes=[quote.text.split('//')[0] for quote in quotes_set]    #remove script from quotes
+	quotes=[quote.text.split('//')[0].encode('utf-8' for quote in quotes_set]    #remove script from quotes
 	log(quotes[0])
 	quotes=[re.sub(r'(\n *)|(\n ―\n )','\n ',quote) for quote in quotes]     #format quotes
 	log('n1')
@@ -73,7 +73,7 @@ def 	goodreads_get(query):
 	log('n2')
 	
 	authors=soup.find_all('a',class_='authorOrTitle')
-	authors=[author.text for author in authors]
+	authors=[author.text.encode('utf-8') for author in authors]
 	quote=random.choice(quotes)
 	log(quote)
 	return quote
