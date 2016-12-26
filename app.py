@@ -51,7 +51,7 @@ def pick_random_word(lines):
         return random_word[0]
   else:
       random_word=random.choice(words)
-      log(return random_word[0])   
+      log(random_word[0])   
       return random_word[0]  
         
 		  
