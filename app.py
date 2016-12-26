@@ -74,8 +74,9 @@ def 	goodreads_get(query):
 	
 	authors=soup.find_all('a',class_='authorOrTitle')
 	authors=[author.text for author in authors]
-	log('fin')
-	return random.choice(quotes)
+	quote=random.choice(quotes)
+	log(quote)
+	return quote
 	
 
 def gnomiko_get(query):
