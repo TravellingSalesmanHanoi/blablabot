@@ -219,6 +219,7 @@ def webhook():
                         log('got to message')
                         log(message_text)
                         reply_text=goodreads_get(pick_random_word(message_text))
+                        reply_text='aaaaaaaaaaaaaaa'
                         log(reply_text)
                         
                         if reply_text!='':
@@ -279,7 +280,8 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-  app.run(debug=True)
+  #app.run(debug=True)
+  goodreads_get('member')
   
  
   
