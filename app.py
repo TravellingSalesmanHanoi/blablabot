@@ -28,7 +28,7 @@ def pick_words(lines):
   blob=TextBlob(lines)
   words=[word for word in blob.tags if word[1]=='NN' or word[1]=='NNS' or word[1]=='NNP' or word=="JJ"]      #nouns and adjectives
   if words==[]:
-	  words=[word[0] for word in blob.tags if word[0] not in stopwords.words('english')]
+	  words=[word for word in blob.tags if word[0] not in stopwords.words('english')]
 	  
 	  
   return words
@@ -67,8 +67,8 @@ def 	goodreads_get(query):
 	
 	quotes_set=soup.find_all('div',class_='quoteText')
 	if quotes_set==[]:
-		log('gpt gibberish')
-		return goodreads_get(random.choice(['confusion','gibberish','cheese']))     
+		log('got gibberish')
+		return "I don't understand"     
 	quotes=[quote.text.split('//<!')[0] for quote in quotes_set]    #remove script from quotes
 	quotes=[''.join(s for s in quote if s in string.printable) for quote in quotes]
 	
@@ -218,8 +218,8 @@ def webhook():
                     try:
                       log(message_text)
                     except UnicodeEncodeError:      #if a 
-				      send_message(sender_id,'Only English please')
-				      return "ok", 200
+                      send_message(sender_id,'Only English please')
+                      return "ok", 200
 				      
 						
 						
