@@ -68,7 +68,7 @@ def 	goodreads_get(query):
 	quotes=[re.sub(r'(\n *)|(\n ―\n )','\n ',quote) for quote in quotes]     #format quotes
 	log('n1')
 	quotes=[re.sub(r' *\n *\n','',quote) for quote in quotes]
-	log('n2'
+	log('n2')
 	
 	authors=soup.find_all('a',class_='authorOrTitle')
 	authors=[author.text for author in authors]
@@ -275,7 +275,8 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-  app.run(debug=True)
+  #app.run(debug=True)
+  goodreads_get('hello')
  
   
  
