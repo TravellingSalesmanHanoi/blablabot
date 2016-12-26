@@ -29,6 +29,9 @@ def pick_words(lines):
   words=[word for word in blob.tags if word[1]=='NN' or word[1]=='NNS' or word[1]=='NNP' or word=="JJ"]      #nouns and adjectives
   if words==[]:
 	  words=[word for word in blob.tags if word[0] not in stopwords.words('english')]
+  if words==[]:
+	  words=blob.tags
+	   	
 	  
 	  
   return words
