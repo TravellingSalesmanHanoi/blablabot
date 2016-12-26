@@ -8,6 +8,7 @@ import random
 from textblob import TextBlob
 from textblob import Word
 import nltk
+from nltk.corpus import stopwords
 import time
 import string
 
@@ -27,7 +28,9 @@ def pick_words(lines):
   blob=TextBlob(lines)
   words=[word for word in blob.tags if word[1]=='NN' or word[1]=='NNS' or word[1]=='NNP' or word=="JJ"]      #nouns and adjectives
   if words==[]:
-	  return []
+	  words=[word[0] for word in blob.tags if word[0] not in stopwords.words('english')]
+	  
+	  
   return words
 	
 
@@ -276,7 +279,6 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-  goodreads_get('anal')
   app.run(debug=True)
   
  
