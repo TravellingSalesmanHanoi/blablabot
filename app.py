@@ -66,7 +66,7 @@ def 	goodreads_get(query):
 		log('gpt gibberish')
 		return goodreads_get(random.choice(['confusion','gibberish','cheese']))     
 	quotes=[quote.text.split('//')[0] for quote in quotes_set]    #remove script from quotes
-	log('split text')
+	log(quotes[0])
 	quotes=[re.sub(r'(\n *)|(\n ―\n )','\n ',quote) for quote in quotes]     #format quotes
 	log('n1')
 	quotes=[re.sub(r' *\n *\n','',quote) for quote in quotes]
