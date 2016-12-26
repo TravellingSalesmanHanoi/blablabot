@@ -214,10 +214,22 @@ def webhook():
 
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
-                    if True:#try:
-                        message_text = messaging_event["message"]["text"]  # the message's text
+                    message_text = messaging_event["message"]["text"]  # the message's text
+                    try:
+                      log(message_text)
+                    except UnicodeEncodeError:      #if a 
+				      send_message(sender_id,'Only English please')
+				      return "ok", 200
+				      
+						
+						
+						
+						
+                    
+                    
+                    try:#try:
+                        
                         log('got to message')
-                        log(message_text)
                         reply_text=goodreads_get(pick_random_word(message_text))
                         log(reply_text)
                         
@@ -225,10 +237,10 @@ def webhook():
                           send_message(sender_id,reply_text)
                         
                         
-                    #except KeyError:
-                     # send_message(sender_id,'I need text messages')
-                   # except ValueError:
-                        #log('Null message')
+                    except KeyError:
+                     send_message(sender_id,'I need text messages')
+                    except ValueError:
+                     log('Null message')
                         
 					
                     
