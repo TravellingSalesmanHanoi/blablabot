@@ -45,11 +45,13 @@ def pick_random_word(lines):
         noun_synsets=[synset for synset in word_obj.synsets if noun_regex.match(synset.name())]      #only the noun synsets are useful(others cause gibberish)
         random_synset = random.choice(noun_synsets)
         random_lemma = random.choice(random_synset.lemma_names())
+        log(random_lemma.replace('_',' '))
         return random_lemma.replace('_',' ')
       except IndexError:
         return random_word[0]
   else:
-      random_word=random.choice(words)   
+      random_word=random.choice(words)
+      log(return random_word[0])   
       return random_word[0]  
         
 		  
@@ -214,6 +216,7 @@ def webhook():
                     try:
                         message_text = messaging_event["message"]["text"]  # the message's text
                         log('got to message')
+                        log(message_text)
                         reply_text=goodreads_get(pick_random_word(message_text))
                         log(reply_text)
                         
