@@ -26,9 +26,11 @@ app = Flask(__name__)
 def pick_words(lines):
   """A function to find words with possible context in a string"""
   blob=TextBlob(lines)
+  if blob.tags==[]:
+	  return []
   words=[word for word in blob.tags if word[1]=='NN' or word[1]=='NNS' or word[1]=='NNP' or word=="JJ"]      #nouns and adjectives
   if words==[]:
-	  words=[word for word in blob.tags if word[0] not in stopwords.words('english')]       #no nouns
+	  words=[word for word in blob.tags if 'VB' in word[1] and word[0] not in stopwords.words('english')]       #no nouns but non-stopword verbs
   if words==[]:
 	  words=blob.tags       #all words are stop words
 	   	
@@ -44,7 +46,7 @@ def pick_random_word(lines):
   if NNP_words!=[]:
     random_word=random.choice(NNP_words)
     return random_word[0]
-  elif random.randint(0,100)<=49:          #randomly choose a synonym for diversity
+  elif random.randint(0,100)<=49 and words!=[]:          #randomly choose a synonym for diversity
       random_word=random.choice(words)   
       word_obj=Word(random_word[0])
       try:
@@ -52,16 +54,14 @@ def pick_random_word(lines):
         noun_synsets=[synset for synset in word_obj.synsets if noun_regex.match(synset.name())]      #only the noun synsets are useful(others cause gibberish)
         random_synset = random.choice(noun_synsets)
         random_lemma = random.choice(random_synset.lemma_names())
-        log(random_lemma.replace('_',' '))
         return random_lemma.replace('_',' ')
       except IndexError:
         return random_word[0]
   elif words!=[]:
-      random_word=random.choice(words)
-      log(random_word[0])   
+      random_word=random.choice(words)  
       return random_word[0]
   else:
-	  return 'nothing'    
+	  return 'nothing'     #no word in lines
         
 		  
 
@@ -207,7 +207,7 @@ def webhook():
     # endpoint for processing incoming messaging events
 
     data = request.get_json()
-    log(data)  # you may not want to log every incoming message in production, but it's good for testing
+    
 
     if data["object"] == "page":
 
@@ -232,11 +232,11 @@ def webhook():
 						
                     
                     
-                    try:#try:
+                    try:
                         
-                        log('got to message')
+                        
                         reply_text=goodreads_get(pick_random_word(message_text))
-                        log(reply_text)
+                        
                         
                         if reply_text!='':
                           send_message(sender_id,reply_text)
@@ -296,6 +296,7 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
+  print(pick_random_word('do you speak english?'))
   app.run(debug=True)
   
  
