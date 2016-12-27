@@ -1,1 +1,1 @@
-web: gunicorn app:app --log-file=-
+web:waitress-serve --threads=4 manage:app
