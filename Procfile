@@ -1,1 +1,1 @@
-web:waitress-serve --threads=4 manage:app
+web: waitress-serve --port=$PORT --threads=8 manage:app

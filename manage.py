@@ -11,6 +11,11 @@ import nltk
 from nltk.corpus import stopwords
 import time
 import string
+from waitress import serve
+
+
+
+
 
 
 
@@ -298,6 +303,7 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 if __name__ == '__main__':
   app.run(debug=True)
+ 
   
   
  
