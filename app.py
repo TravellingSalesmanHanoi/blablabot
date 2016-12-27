@@ -296,7 +296,6 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-  print(pick_random_word('do you speak english?'))
   app.run(debug=True)
   
  
