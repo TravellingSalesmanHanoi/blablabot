@@ -80,20 +80,18 @@ def 	goodreads_get(query):
 	if quotes_set==[]:
 	  log('got gibberish')
 	  return "I don't understand"     
-	quotes=[quote.text.split('//<!')[0] for quote in quotes_set]    #remove script from quotes
 	#quotes=[''.join(s for s in quote if s in string.printable) for quote in quotes]
 	found=False
-	for i in range(1,5):    #we don't want unicode characters - 5 chances to find a quote
+	for i in range(1,len(quotes_set)*2):    #we don't want unicode characters - 5 chances to find a quote
 	  quote=random.choice(quotes_set)
 	  quote=quote.text.split('//<!')[0] #remove script
 	  counter=0
-	for s in quote:
-	  if s not in string.printable:
-	    counter+=1
-	  if counter/len(quote) < 0.2:     #less than 30% unicode is good enough
-	    found=True
+	  for s in quote:
+	    if s in string.printable:
+	      counter+=1
+	  if counter/len(quote) > 0.8:     #more than 80% of text should be printable
+	    found=True                           #fast way to guarantee it contains mostly latin characters
 	    quote=''.join(s for s in quote if s in string.printable)
-	    print(quote)
 	    break
 			
 	
