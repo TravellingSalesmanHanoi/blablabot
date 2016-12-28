@@ -88,7 +88,7 @@ def 	goodreads_get(query):
 	
 	quotes_set=soup.find_all('div',class_='quoteText')
 	if quotes_set==[]:
-	  log('got gibberish')
+	  log('got gibberish with query='+query)
 	  return "I don't understand"     
 	#quotes=[''.join(s for s in quote if s in string.printable) for quote in quotes]
 	found=False
@@ -99,7 +99,7 @@ def 	goodreads_get(query):
 	  for s in quote:
 	    if s in string.printable:
 	      counter+=1
-	  log('counter='+counter)    
+	  log('counter= '+str(counter))    
 	    
 	  if counter/len(quote) > 0.5:     #more than 50% of text should be printable
 	    found=True                           #fast way to guarantee it contains mostly latin characters
