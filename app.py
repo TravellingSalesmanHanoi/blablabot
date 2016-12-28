@@ -73,13 +73,13 @@ def pick_random_word(lines):
 
 def 	goodreads_get(query):
 	quote_data=requests.get('http://www.goodreads.com/quotes/tag/{}'.format(str(query)))
-	soup=BeautifulSoup(quote_data.text,'html.parser')
+	soup=BeautifulSoup(quote_data.text,'lxml')
 	log('got data')
 	
 	quotes_set=soup.find_all('div',class_='quoteText')
 	if quotes_set==[]:
-		log('got gibberish')
-		return "I don't understand"     
+	  log('got gibberish')
+	  return "I don't understand"     
 	quotes=[quote.text.split('//<!')[0] for quote in quotes_set]    #remove script from quotes
 	quotes=[''.join(s for s in quote if s in string.printable) for quote in quotes]
 	
@@ -302,6 +302,7 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
+  print(goodreads_get('hello'))
   app.run(debug=True)
  
   
