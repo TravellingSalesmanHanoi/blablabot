@@ -52,11 +52,11 @@ def pick_random_word(lines):
   if NNP_words!=[]:
     random_word=random.choice(NNP_words)
     return random_word[0]
-  elif words!=[]:
-    random_word=random.choice(words)  
-    return random_word[0]
+   elif words!=[]:
+      random_word=random.choice(words)  
+      return random_word[0]
   else:
-    return 'nothing'     #no word in lines   
+	  return 'nothing'     #no word in lines   
        
    #   word_obj=Word(random_word[0])
    #   try:
@@ -302,6 +302,7 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
+  print(goodreads_get('hello'))
   app.run(debug=True)
  
   
