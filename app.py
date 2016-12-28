@@ -81,13 +81,28 @@ def 	goodreads_get(query):
 	  log('got gibberish')
 	  return "I don't understand"     
 	quotes=[quote.text.split('//<!')[0] for quote in quotes_set]    #remove script from quotes
-	quotes=[''.join(s for s in quote if s in string.printable) for quote in quotes]
+	#quotes=[''.join(s for s in quote if s in string.printable) for quote in quotes]
+	found=False
+	for i in range(1,5):    #we don't want unicode characters - 5 chances to find a quote
+	  quote=random.choice(quotes_set)
+	  quote=quote.text.split('//<!')[0] #remove script
+	  counter=0
+	for s in quote:
+	  if s not in string.printable:
+	    counter+=1
+	  if counter/len(quote) < 0.2:     #less than 30% unicode is good enough
+	    found=True
+	    quote=''.join(s for s in quote if s in string.printable)
+	    print(quote)
+	    break
+			
 	
 	authors=soup.find_all('a',class_='authorOrTitle')
-	authors=[author.text for author in authors]
-	quote=random.choice(quotes)
-	log(quote)
-	return quote
+	authors=[author.text for author in authors]        #for later use
+	if found:
+	  return quote
+	else:
+	  return "I don't speak that many languages yet" 
 	
 
 def gnomiko_get(query):
