@@ -72,9 +72,19 @@ def pick_random_word(lines):
 		  
 
 def 	goodreads_get(query):
+	#'<a href="/quotes/tag/love?page=99">99</a>
 	quote_data=requests.get('http://www.goodreads.com/quotes/tag/{}'.format(str(query)))
 	soup=BeautifulSoup(quote_data.text,'lxml')
-	log('got data')
+	
+	pages=soup.find_all('a',href=re.compile(r'/quotes/tag/.*page=[1-9]*'))
+	
+	if pages != []:
+		max_page=int(pages[-2].text)
+		print(max_page)
+		page=random.randint(1,max_page)
+		quote_data=requests.get('http://www.goodreads.com/quotes/tag/{}?page={}'.format(str(query),str(page)))
+		
+	
 	
 	quotes_set=soup.find_all('div',class_='quoteText')
 	if quotes_set==[]:
