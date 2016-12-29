@@ -101,7 +101,7 @@ def 	goodreads_get(query):
 	      counter+=1
 	  log('counter= '+str(counter/len(quote)))    
 	    
-	  if counter/len(quote) > 0.5:     #more than 50% of text should be printable
+	  if counter/long(len(quote)) > 0.5:     #more than 50% of text should be printable
 	    found=True                           #fast way to guarantee it contains mostly latin characters
 	    quote=''.join(s for s in quote if s in string.printable)
 	    break
