@@ -103,7 +103,7 @@ def 	goodreads_get(query):
 	quotes_set=soup.find_all('div',class_='quoteText')
 	if quotes_set==[]:
 	  log('got gibberish with query='+query)
-	  return goodreads_get(random.choice('[gibberish','confusion','confused']))     
+	  return goodreads_get(random.choice(['gibberish','confusion','confused']))     
 	#quotes=[''.join(s for s in quote if s in string.printable) for quote in quotes]
 	found=False
 	for i in range(1,len(quotes_set)*2):    #we don't want unicode characters - 5 chances to find a quote
@@ -287,6 +287,7 @@ def webhook():
                     try:
                         for message_chunk in word_split(reply_text):
                             send_message(sender_id,message_chunk)
+                        
                             
                      
 									
@@ -301,8 +302,10 @@ def webhook():
                         
                     except KeyError:
                      send_message(sender_id,'I need text messages')
+                     return 'ok',200
                     except ValueError:
                      log('Null message')
+                     return ok,200
                         
 					
                     
