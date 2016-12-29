@@ -264,12 +264,19 @@ def webhook():
 
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
-                    message_text = messaging_event["message"]["text"]  # the message's text
+                    
+                   
                     try:
+                      message_text = messaging_event["message"]["text"]  # the message's text
                       log(message_text)
                     except UnicodeEncodeError:      #if a 
                       send_message(sender_id,'Only English please')
                       return "ok", 200
+                    except KeyError:
+                      send_message(sender_id,"I am still retarded and can only reply to text")
+                      return "ok", 200
+                        
+                    
 				      
 						
 						
