@@ -103,7 +103,7 @@ def 	goodreads_get(query):
 	quotes_set=soup.find_all('div',class_='quoteText')
 	if quotes_set==[]:
 	  log('got gibberish with query='+query)
-	  return goodreads_get(random.choice('gibberish','confusion','confused'))     
+	  return goodreads_get(random.choice('[gibberish','confusion','confused']))     
 	#quotes=[''.join(s for s in quote if s in string.printable) for quote in quotes]
 	found=False
 	for i in range(1,len(quotes_set)*2):    #we don't want unicode characters - 5 chances to find a quote
