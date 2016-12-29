@@ -12,7 +12,21 @@ from nltk.corpus import stopwords
 import time
 import string
 
-
+def word_split(reply_text):
+  if len(reply_text)>640 and reply_text!='':
+    words=reply_text.split(' ')
+    reply_list=[]
+    reply_term=''
+    for word in words:
+      if len(reply_term)+len(word)>640:                                                        #case quote > 640 characters
+        reply_list.append(reply_term)
+        reply_term=''
+      reply_term=reply_term+ ' ' + word          #split message into sendable chunks
+    if reply_term!='':                                                  #without spoiling words
+      reply_list.append(reply_term)
+    return reply_list
+  else:
+      return [reply_text]
 
 
 
@@ -261,16 +275,21 @@ def webhook():
 						
 						
 						
-                    
-                    
+                                    
+                    reply_text=goodreads_get(pick_random_word(message_text))
                     try:
+                        for message_chunk in word_split(reply_text):
+                            send_message(sender_id,message)
+                            
+                     
+									
+								
+								
+									
+						    
                         
                         
-                        reply_text=goodreads_get(pick_random_word(message_text))
                         
-                        
-                        if reply_text!='':
-                          send_message(sender_id,reply_text)
                         
                         
                     except KeyError:
