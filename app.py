@@ -279,7 +279,7 @@ def webhook():
                     reply_text=goodreads_get(pick_random_word(message_text))
                     try:
                         for message_chunk in word_split(reply_text):
-                            send_message(sender_id,message)
+                            send_message(sender_id,message_chunk)
                             
                      
 									
